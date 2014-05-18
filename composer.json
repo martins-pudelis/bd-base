@@ -1,0 +1,33 @@
+{
+    "name": "zendframework/skeleton-application",
+    "description": "BD",
+    "keywords": [],
+    "homepage": "http://framework.zend.com/",
+    "minimum-stability": "dev",
+    "repositories": [
+        { "type": "composer", "url": "http://package-repository.bd"}
+    ],
+    "require": {
+        "php": ">=5.3.10",
+        "twitter/bootstrap":"3.*",
+        "bjyoungblood/bjy-profiler": "dev-master",
+        "zendframework/zend-developer-tools": "dev-master",
+        "zendframework/zendframework": "2.2.*",
+        "doctrine/doctrine-orm-module": "*",
+        "doctrine/doctrine-module": "*",
+        "gedmo/doctrine-extensions": "dev-master",
+        "rwoverdijk/assetmanager": "dev-master",
+        "dlu/dlutwbootstrap": "dev-master",
+        "bd/bd-generic" : "dev-master",
+        "bd/bd-config": "dev-master",
+        "bd/bd-user": "dev-master",
+        "bd/bd-authentication": "dev-master",
+        "coolcsn/csn-user": "dev-master"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*",
+        "phploc/phploc": "dev-master",
+        "squizlabs/php_codesniffer": "dev-master",
+        "phpmd/phpmd": "1.4.0"
+    }
+}

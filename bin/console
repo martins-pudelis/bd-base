@@ -1,0 +1,7 @@
+#!/bin/bash
+
+DIR=`dirname $0`;
+
+ROOT=`realpath $DIR/..`;
+
+php -f $ROOT/public/index.php $@

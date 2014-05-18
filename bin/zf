@@ -1,0 +1,21 @@
+#!/usr/bin/php
+<?php
+chdir(dirname(__DIR__));
+
+define('REQUEST_MICROTIME', microtime(true));
+
+ini_set('display_errors', true);
+error_reporting(E_ALL);
+
+register_shutdown_function(function() {
+    $last_error = error_get_last();
+    if (!empty($last_error)) {
+       var_dump($last_error);
+    }
+});
+
+require 'init_autoloader.php';
+
+Zend\Mvc\Application::init(require 'config/zf.config.php')->run();
+
+
