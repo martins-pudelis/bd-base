@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="bd-base" default="doctrine-update-schema-force">
+    <property name="bdPackages" value="bd-authentication,bd-generic,bd-config,bd-user"/>
+    <property name="basedir" value="." />
+    <property name="bdVendorDir" value="${basedir}/vendor/bd/" />
+
+    <property file="${basedir}/build.properties" />
+
+    <import file="php-qa-tools.xml"/>
+
+    <target name="qa-reports">
+        <phingcall target="php-qa-tools.phploc" />
+        <phingcall target="php-qa-tools.pdepend" />
+        <phingcall target="php-qa-tools.phpcpd" />
+        <phingcall target="php-qa-tools.phpcs" />
+        <phingcall target="php-qa-tools.phpdox" />
+        <phingcall target="php-qa-tools.phpmd" />
+        <phingcall target="php-qa-tools.phpunit-reports" />
+    </target>
+
+    <target name="build">
+
+        <phingcall target="composer-install"/>
+        <phingcall target="flush-caches"/>
+        <phingcall target="make-configs">
+            <property file="${basedir}/build.properties" />
+        </phingcall>
+        <phingcall target="doctrine-update-schema-force"/>
+
+    </target>
+
+    <target name="build-test">
+
+        <phingcall target="composer-install"/>
+        <phingcall target="flush-caches"/>
+        <phingcall target="make-configs">
+            <property file="${basedir}/build-test.properties" />
+        </phingcall>
+        <phingcall target="doctrine-update-schema-force"/>
+
+    </target>
+
+    <target name="build-bleeding-edge">
+
+        <phingcall target="composer-install"/>
+        <phingcall target="flush-caches"/>
+        <phingcall target="make-configs">
+            <property file="${basedir}/build-test.properties" />
+        </phingcall>
+        <phingcall target="doctrine-update-schema-force"/>
+
+    </target>
+
+    <target name="composer-install">
+        <exec command="php composer.phar update" logoutput="/dev/stdout" />
+    </target>
+
+    <target name="flush-caches">
+        <phingcall target="flush-doctrine-cache"/>
+        <phingcall target="flush-apc-cache"/>
+    </target>
+
+    <target name="flush-doctrine-cache">
+        <exec command="php vendor/bin/doctrine-module orm:clear-cache:metadata" logoutput="/dev/stdout" />
+    </target>
+
+    <target name="flush-apc-cache">
+        <exec command="php clear_apc.php" logoutput="/dev/stdout" />
+    </target>
+
+    <target name="doctrine-update-schema-force">
+        <exec command="php vendor/bin/doctrine-module orm:schema-tool:update --force" logoutput="/dev/stdout" />
+    </target>
+
+    <target name="make-configs" description="">
+        <fail unless="configProfile">Please, set configProfile 'configProfile'!</fail>
+        <echo>Using config profile: ${configProfile}</echo>
+
+        <copy verbose="true" overwrite="true" toDir="${basedir}/config/autoload">
+            <fileset id="templateFiles" dir="${basedir}/config/profiles/${configProfile}">
+                <include name="*.php"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="remove-config-profiles-directory">
+        <delete dir="${basedir}/config/profiles"/>
+    </target>
+
+    <target name="clear-build-directory">
+        <delete dir="${basedir}/build/"/>
+    </target>
+
+    <target name="create-build-directory">
+        <mkdir dir="${basedir}/build/" />
+    </target>
+</project>

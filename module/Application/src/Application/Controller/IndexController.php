@@ -17,20 +17,25 @@ class IndexController extends AbstractActionController
 {
     public function indexAction()
     {
-        $sl = $this->getServiceLocator();
-
-        $config = $sl->get('Config');
-
-        /** @var AuthService $authService */
-        $authService = $sl->get('AuthService');
-
-        echo '<pre>';
-        var_dump($config['bd_configuration']);
-        if ($authService->getIdentity()) {
-            var_dump($authService->getIdentity()->getUsername());
-        }
-        die();
+//        $sl = $this->getServiceLocator();
+//
+//        $config = $sl->get('Config');
+//
+//        /** @var AuthService $authService */
+//        $authService = $sl->get('AuthService');
+//
+//        echo '<pre>';
+//        var_dump($config['bd_configuration']);
+//        if ($authService->getIdentity()) {
+//            var_dump($authService->getIdentity()->getUsername());
+//        }
+//        echo '</pre>';
         return new ViewModel();
+    }
+
+    public function secretAction()
+    {
+
     }
 
     public function asAction()

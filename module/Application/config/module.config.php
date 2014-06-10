@@ -102,6 +102,15 @@ return array(
         ),
     ),
 
+    'navigation' => array(
+        'default' => array(
+            'home' => array(
+                'label' => 'Home',
+                'route' => 'bd_home',
+            ),
+        ),
+    ),
+
     'doctrine' => array(
         'driver' => array(
             __NAMESPACE__ . '_driver' => array(
