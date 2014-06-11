@@ -42,11 +42,13 @@
     <target name="build-test">
 
         <phingcall target="composer-install"/>
+        <phingcall target="doctrine-drop-schema"/>
         <phingcall target="flush-caches"/>
         <phingcall target="make-configs">
             <property file="${basedir}/build-test.properties" />
         </phingcall>
         <phingcall target="doctrine-update-schema-force"/>
+        <phingcall target="generate-users"/>
 
     </target>
 
@@ -80,6 +82,18 @@
 
     <target name="doctrine-update-schema-force">
         <exec command="php vendor/bin/doctrine-module orm:schema-tool:update --force" logoutput="/dev/stdout" />
+    </target>
+
+    <target name="doctrine-drop-schema">
+        <exec command="php vendor/bin/doctrine-module orm:schema-tool:drop --force" logoutput="/dev/stdout" />
+    </target>
+
+    <target name="doctrine-validate-schema">
+        <exec command="php vendor/bin/doctrine-module orm:validate-schema" logoutput="/dev/stdout" />
+    </target>
+
+    <target name="generate-users">
+        <exec command="php dev/generate-users.php" logoutput="/dev/stdout" />
     </target>
 
     <target name="make-configs" description="">
@@ -160,7 +174,6 @@
             <arg value="--report-file=${basedir}/build/logs/checkstyle.xml"/>
             <arg value="--standard=${basedir}/build/phpcs.xml"/>
             <arg value="--ignore=*.css,*.js"/>
-            <arg path="${basedir}/module"/>
             <arg path="${bdVendorDir}"/>
         </exec>
     </target>
