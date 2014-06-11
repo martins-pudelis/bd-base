@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<phpdox xmlns="http://phpdox.net/config">
+    <project name="BD Modules" source="./vendor/bd" workdir="./build/api/xml">
+        <collector backend="parser" />
+        <generator output="./build/api">
+            <build engine="html" output="html"/>
+        </generator>
+    </project>
+</phpdox>

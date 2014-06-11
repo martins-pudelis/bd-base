@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit bootstrap="./bootstrap.php"
+         backupGlobals="false"
+         backupStaticAttributes="false"
+         strict="true"
+         verbose="true">
+
+  <testsuites>
+    <testsuite name="BD Tests">
+      <directory suffix="Test.php">vendor/bd/bd-authentication/test</directory>
+    </testsuite>
+  </testsuites>
+</phpunit>
