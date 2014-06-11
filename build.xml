@@ -10,13 +10,13 @@
     <import file="php-qa-tools.xml"/>
 
     <target name="qa-reports">
-        <phingcall target="php-qa-tools.phploc" />
+        <!--<phingcall target="php-qa-tools.phploc" />-->
         <phingcall target="php-qa-tools.pdepend" />
         <phingcall target="php-qa-tools.phpcpd" />
         <phingcall target="php-qa-tools.phpcs" />
         <phingcall target="php-qa-tools.phpdox" />
         <phingcall target="php-qa-tools.phpmd" />
-        <phingcall target="php-qa-tools.phpunit-reports" />
+        <!--<phingcall target="php-qa-tools.phpunit-reports" />-->
     </target>
 
     <target name="build">
