@@ -6,17 +6,26 @@
     <property name="bdVendorDir" value="${basedir}/vendor/bd/" />
 
     <property file="${basedir}/build.properties" />
-
-    <import file="php-qa-tools.xml"/>
+    <!--<import file="${basedir}/php-qa-tools.xml"/>-->
 
     <target name="qa-reports">
-        <!--<phingcall target="php-qa-tools.phploc" />-->
-        <phingcall target="php-qa-tools.pdepend" />
-        <phingcall target="php-qa-tools.phpcpd" />
-        <phingcall target="php-qa-tools.phpcs" />
-        <phingcall target="php-qa-tools.phpdox" />
-        <phingcall target="php-qa-tools.phpmd" />
-        <!--<phingcall target="php-qa-tools.phpunit-reports" />-->
+        <phingcall target="phploc" />
+        <phingcall target="pdepend" />
+        <phingcall target="phpcpd" />
+        <phingcall target="phpcs" />
+        <phingcall target="phpdox" />
+        <phingcall target="phpmd" />
+        <phingcall target="phpunit-reports" />
+    </target>
+
+    <target name="qa-reports-ci">
+        <phingcall target="phploc" />
+        <phingcall target="pdepend" />
+        <phingcall target="phpcpd" />
+        <phingcall target="phpcs-ci" />
+        <phingcall target="phpdox" />
+        <phingcall target="phpmd-ci" />
+        <phingcall target="phpunit-reports" />
     </target>
 
     <target name="build">
@@ -94,5 +103,108 @@
 
     <target name="create-build-directory">
         <mkdir dir="${basedir}/build/" />
+    </target>
+
+    <target name="phploc" description="Measure project size using PHPLOC">
+        <exec executable="phploc">
+            <arg value="--log-csv"/>
+            <arg value="${basedir}/build/logs/phploc.csv"/>
+            <arg path="${basedir}/module"/>
+            <arg path="${bdVendorDir}"/>
+        </exec>
+    </target>
+
+    <target name="pdepend" description="Calculate software metrics using PHP_Depend">
+        <exec executable="pdepend">
+            <arg value="--jdepend-xml=${basedir}/build/logs/jdepend.xml"/>
+            <arg value="--jdepend-chart=${basedir}/build/pdepend/dependencies.svg"/>
+            <arg value="--overview-pyramid=${basedir}/build/pdepend/overview-pyramid.svg"/>
+            <arg path="${basedir}/module,${bdVendorDir}"/>
+        </exec>
+    </target>
+
+    <target name="phpmd"
+            description="Perform project mess detection using PHPMD and print human readable output. Intended for usage on the command line before committing.">
+        <exec executable="phpmd">
+            <arg path="${basedir}/module,${bdVendorDir}"/>
+            <arg value="text"/>
+            <arg value="${basedir}/build/phpmd.xml"/>
+        </exec>
+    </target>
+
+    <target name="phpmd-ci"
+            description="Perform project mess detection using PHPMD creating a log file for the continuous integration server">
+        <exec executable="phpmd">
+            <arg path="${basedir}/module,${bdVendorDir}"/>
+            <arg value="xml"/>
+            <arg value="${basedir}/build/phpmd.xml"/>
+            <arg value="--reportfile"/>
+            <arg value="${basedir}/build/logs/pmd.xml"/>
+        </exec>
+    </target>
+
+    <target name="phpcs"
+            description="Find coding standard violations using PHP_CodeSniffer and print human readable output. Intended for usage on the command line before committing.">
+        <exec executable="phpcs">
+            <arg value="--standard=${basedir}/build/phpcs.xml"/>
+            <arg value="--ignore=*.css,*.js"/>
+            <arg path="${basedir}/module"/>
+            <arg path="${bdVendorDir}"/>
+        </exec>
+    </target>
+
+    <target name="phpcs-ci"
+            description="Find coding standard violations using PHP_CodeSniffer creating a log file for the continuous integration server">
+        <exec executable="phpcs" output="/dev/null">
+            <arg value="--report=checkstyle"/>
+            <arg value="--report-file=${basedir}/build/logs/checkstyle.xml"/>
+            <arg value="--standard=${basedir}/build/phpcs.xml"/>
+            <arg value="--ignore=*.css,*.js"/>
+            <arg path="${basedir}/module"/>
+            <arg path="${bdVendorDir}"/>
+        </exec>
+    </target>
+
+    <target name="phpcpd" description="Find duplicate code using PHPCPD">
+        <exec executable="phpcpd">
+            <arg value="--log-pmd"/>
+            <arg value="${basedir}/build/logs/pmd-cpd.xml"/>
+            <arg path="${basedir}/module"/>
+            <arg path="${bdVendorDir}"/>
+        </exec>
+    </target>
+
+    <target name="phpdox" description="Generate API documentation using phpDox">
+        <exec executable="phpdox">
+            <arg value="--file=build/phpdox.xml" />
+        </exec>
+    </target>
+
+    <target name="phpunit" description="Run unit tests with PHPUnit">
+        <exec executable="phpunit" failonerror="true">
+            <arg value="-dzend.enable_gc=0"/>
+        </exec>
+    </target>
+
+    <target name="phpunit-reports" description="Generate PHPUnit coverage report">
+        <exec executable="phpunit">
+            <arg value="--bootstrap" />
+            <arg value="./Bootstrap.php" />
+            <arg value="--coverage-html" />
+            <arg value="./build/coverage-reports/" />
+        </exec>
+    </target>
+
+    <target name="phpcb" description="Aggregate tool output with PHP_CodeBrowser">
+        <exec executable="phpcb">
+            <arg value="--log"/>
+            <arg path="${basedir}/build/logs"/>
+            <arg value="--source"/>
+            <arg path="${basedir}/module"/>
+            <arg value="--source"/>
+            <arg path="${bdVendorDir}"/>
+            <arg value="--output"/>
+            <arg path="${basedir}/build/code-browser"/>
+        </exec>
     </target>
 </project>

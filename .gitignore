@@ -7,13 +7,6 @@ nbproject
 .project
 .settings
 data/DoctrineORMModule/*
-build/api
-build/code-browser
-build/coverage
-build/logs
-build/pdepend
-build/phpdox
-build/graph
 tmp
 docs
 build-dev.properties
