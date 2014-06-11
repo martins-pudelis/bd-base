@@ -77,7 +77,7 @@
         <fail unless="configProfile">Please, set configProfile 'configProfile'!</fail>
         <echo>Using config profile: ${configProfile}</echo>
 
-        <copy verbose="true" overwrite="true" toDir="${basedir}/config/autoload">
+        <copy verbose="true" overwrite="false" toDir="${basedir}/config/autoload">
             <fileset id="templateFiles" dir="${basedir}/config/profiles/${configProfile}">
                 <include name="*.php"/>
             </fileset>
